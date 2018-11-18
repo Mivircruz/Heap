@@ -22,6 +22,18 @@ int comparar_enteros(const void* a, const void* b){
 	return 0;
 }
 
+int comparar_enteros_grandes(const void* a, const void* b){
+
+    long int numero1 = *(long int*)a;
+    long int numero2 = *(long int*)b;
+    if(numero1 < numero2)
+        return -1;
+    else if(numero1 > numero2)
+        return 1;
+    return 0;
+}
+
+
 /* ******************************************************************
  *                        PRUEBAS UNITARIAS
  * *****************************************************************/
@@ -69,7 +81,7 @@ static void prueba_crear_heap_con_arreglo(){
 
 static void prueba_heap_insertar(){
 
-	printf("\nINSERTAR COSAS EN HEAP\n");
+	printf("\nENCOLAR Y DESENCOLAR COSAS EN HEAP\n");
 
     heap_t* heap = heap_crear(comparar_enteros);
 
@@ -103,8 +115,78 @@ static void prueba_heap_insertar(){
     heap_destruir(heap, NULL);
 }
 
+static void prueba_heap_clave_vacia(){
+
+    printf("\nENCOLAR NULL EN HEAP\n");
+
+    heap_t* heap = heap_crear(NULL);
+
+    void *clave = NULL;
+
+    print_test("Prueba heap insertar clave vacia", heap_encolar(heap, clave));
+    print_test("Prueba heap la cantidad de elementos es 1", heap_cantidad(heap) == 1);
+    print_test("Prueba heap obtener clave vacia es valor", !heap_desencolar(heap));
+    print_test("Prueba heap la cantidad de elementos es 0", heap_cantidad(heap) == 0);
+
+    heap_destruir(heap, NULL);
+}
+
+static void prueba_heap_volumen(size_t tam){
+
+    printf("\nPRUEBA HEAP VOLUMEN\n");
+
+    //Declaración de variables auxiliares
+
+    bool ok = true;
+    long int* vec_vol = malloc(sizeof(long int)*tam);
+    void** arreglo = malloc(sizeof(void*)*tam);
+
+    for(long int i = 0; i < tam; i++)
+        vec_vol[i] = i;
+
+    for(size_t i = 0; i < tam; i++)
+        arreglo[i] = &vec_vol[i];
+
+    heap_t* heap = heap_crear_arr(arreglo, tam, comparar_enteros_grandes);
+
+    //Comienzo de las pruebas con heap_crear_arr
+
+    print_test("Prueba crear heap a partir de arreglo grande", heap);
+    print_test("El tamaño es el correcto", heap_cantidad(heap) == tam);
+
+    /* Verifica que borre y devuelva los valores correctos */
+    for (long int i = tam-1; i >= 0; i--){
+        ok = *(long int*)heap_desencolar(heap) == vec_vol[i];
+        if (!ok) break;
+    }
+
+    print_test("Prueba heap borrar muchos elementos", ok);
+    print_test("Prueba heap la cantidad de elementos es 0", heap_cantidad(heap) == 0);
+
+    heap_destruir(heap, NULL);
+
+    //Comienzo de las pruebas con heap_crear
+
+    heap = heap_crear(comparar_enteros_grandes);
+    for(size_t i = 0; i < tam; i++) {
+        ok = heap_encolar(heap, arreglo[i]);
+        if (!ok) break;
+        ok = heap_ver_max(heap) == arreglo[i];
+        if (!ok) break;
+    }
+
+    print_test("Prueba heap encolar y ver máximo de muchos elementos", ok);
+    print_test("Prueba hash la cantidad de elementos es correcta", heap_cantidad(heap) == tam);
+
+    heap_destruir(heap, NULL);
+    free(vec_vol);
+
+
+}
 void pruebas_heap_alumno(void){
 	prueba_crear_heap_vacio();
 	prueba_crear_heap_con_arreglo();
 	prueba_heap_insertar();
+    prueba_heap_clave_vacia();
+    prueba_heap_volumen(10000);
 }
