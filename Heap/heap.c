@@ -30,24 +30,21 @@ void swap(void** a, void** b){
 	*a = aux;
 }
 
+
 void downheap(void* arreglo[], size_t pos_padre, size_t pos_hijo_izq, size_t pos_hijo_der, cmp_func_t cmp, size_t tam){
 
-	if(pos_hijo_der >= tam || pos_hijo_izq >= tam)
+	if(pos_hijo_izq >= tam)
 		return;
 
 	size_t pos_hijo_a_cambiar;
 
-	if(arreglo[pos_hijo_der] && arreglo[pos_hijo_izq]){
+	if(pos_hijo_der < tam && pos_hijo_izq < tam){
 
-		if(cmp(arreglo[pos_padre], arreglo[pos_hijo_izq]) < 0 ||  cmp(arreglo[pos_padre], arreglo[pos_hijo_der]) < 0){
+		if(cmp(arreglo[pos_padre], arreglo[pos_hijo_izq]) < 0 ||  cmp(arreglo[pos_padre], arreglo[pos_hijo_der]) < 0)
 			pos_hijo_a_cambiar = (cmp(arreglo[pos_hijo_izq], arreglo[pos_hijo_der]) < 0) ? pos_hijo_der : pos_hijo_izq;
-			
-				
-			
-		}
 	}
 	else{
-		pos_hijo_a_cambiar = (arreglo[pos_hijo_izq] && !arreglo[pos_hijo_der]) ? pos_hijo_izq : pos_hijo_der;
+		pos_hijo_a_cambiar =  pos_hijo_izq;
 		if(cmp(arreglo[pos_padre], arreglo[pos_hijo_a_cambiar]) > 0)
 			return;
 	}
@@ -187,7 +184,7 @@ void heap_sort(void *elementos[], size_t cant, cmp_func_t cmp){
 	size_t ultimo_relativo = cant-1;
 	for(size_t i = 0; i < cant-2; i++){
 		swap(&(elementos[0]), &(elementos[ultimo_relativo]));
-		ultimo_relativo--;
 		downheap(elementos, 0, 1, 2, cmp, ultimo_relativo);
+		ultimo_relativo--;
 	}
 }
