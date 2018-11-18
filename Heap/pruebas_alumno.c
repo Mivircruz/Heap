@@ -103,8 +103,31 @@ static void prueba_heap_insertar(){
     heap_destruir(heap, NULL);
 }
 
+static void prueba_heap_heapsort(){
+	size_t largo = 7;
+	void** vector = malloc(sizeof(void*)*largo);
+	
+	int numeros[] = {8, 2, 3, 5, 20, 1, 10};
+	for(size_t i = 0; i < largo; i++)
+		vector[i] = &numeros[i];
+	
+	heap_sort(vector, largo, comparar_enteros);
+	printf("\nPRUEBA HEAPSORT\n");
+	
+	bool ok = true;
+	for(int i = 0; i < largo-2; i++){
+		if(comparar_enteros(vector[i], vector[i+1]) > 0)
+			ok = false;
+	}
+	
+	print_test("Prueba heapsort", ok);
+
+	free(vector);
+}
+
 void pruebas_heap_alumno(void){
 	prueba_crear_heap_vacio();
 	prueba_crear_heap_con_arreglo();
 	prueba_heap_insertar();
+	prueba_heap_heapsort();
 }
