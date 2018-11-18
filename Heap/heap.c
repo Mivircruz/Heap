@@ -4,6 +4,7 @@
 #include "heap.h"
 
 #define TAM_INICIAL 		30
+#define CAPACIDAD_MINIMA	13
 #define FACTOR_REDIMENSION 	2
 
 /* *****************************************************************
@@ -60,9 +61,14 @@ void downheap(void* arreglo[], size_t pos_padre, size_t pos_hijo_izq, size_t pos
 void upheap(void* arreglo[], size_t pos_hijo, cmp_func_t cmp){
 
 	size_t pos_padre = (pos_hijo-1)/2;
-
-	while(cmp(arreglo[pos_padre], arreglo[pos_hijo]) < 0)
+	while(cmp(arreglo[pos_padre], arreglo[pos_hijo]) < 0){
 		swap(&(arreglo[pos_padre]), &(arreglo[pos_hijo]));
+		if(!pos_padre)
+			break;
+
+		pos_hijo = pos_padre;
+		pos_padre = (pos_padre-1)/2;
+	}
 }
 
 void heapify(void* arreglo[], size_t n, cmp_func_t cmp){
@@ -142,7 +148,8 @@ bool heap_encolar(heap_t *heap, void *elem){
 		heap->capacidad = heap->capacidad * FACTOR_REDIMENSION;
 	}
 	heap->vector[heap->cantidad] = elem;
-	upheap(heap->vector, heap->cantidad, heap->funcion_comparar);
+	if(heap->cantidad)
+		upheap(heap->vector, heap->cantidad, heap->funcion_comparar);
 	heap->cantidad++;
 	return true;
 
