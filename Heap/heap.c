@@ -77,22 +77,17 @@ void heapify(void* arreglo[], size_t n, cmp_func_t cmp){
 		downheap(arreglo, i, i*2+1, i*2+2, cmp, n);
 }
 
-bool heap_agrandar(heap_t* heap){
-	void** aux = realloc(heap->vector, sizeof(void*) * heap->capacidad * FACTOR_REDIMENSION);
+bool heap_a_redimensionar(heap_t* heap, size_t tam){
+	if(heap->capacidad > tam){
+		if(heap->capacidad <= CAPACIDAD_MINIMA)
+			return true;
+	}
+	void** aux = realloc(heap->vector, sizeof(void*) * tam);
 	if(!aux)
 		return false;
 	heap->vector = aux;
-	heap->capacidad *= FACTOR_REDIMENSION;
+	heap->capacidad = tam;
 	return true;
-}
-void heap_achicar(heap_t* heap){
-	if(heap->cantidad <= CAPACIDAD_MINIMA)
-		return;
-	void** aux = realloc(heap->vector, sizeof(void*) *(heap->capacidad)/2);
-	if(!aux)
-		return;
-	heap->vector = aux;
-	heap->capacidad /= 2;
 }
 
 /* *****************************************************************
@@ -160,7 +155,7 @@ void *heap_ver_max(const heap_t *heap){
 bool heap_encolar(heap_t *heap, void *elem){
 
 	if(heap->cantidad == heap->capacidad){
-		if(!heap_agrandar(heap))
+		if(!heap_a_redimensionar(heap, heap->capacidad * FACTOR_REDIMENSION))
 			return false;
 	}
 	heap->vector[heap->cantidad] = elem;
@@ -177,7 +172,7 @@ void *heap_desencolar(heap_t *heap){
 		return NULL;
 
 	if(heap->cantidad <= (heap->capacidad)/4)
-		heap_achicar(heap);
+		heap_a_redimensionar(heap, heap->capacidad/FACTOR_REDIMENSION);
 	void* a_devolver = heap->vector[0];
 	swap(&(heap->vector[0]), &(heap->vector[heap->cantidad-1]));
 	heap->cantidad--;
