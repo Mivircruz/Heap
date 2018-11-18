@@ -187,7 +187,7 @@ void heap_sort(void *elementos[], size_t cant, cmp_func_t cmp){
 	size_t ultimo_relativo = cant-1;
 	for(size_t i = 0; i < cant-2; i++){
 		swap(&(elementos[0]), &(elementos[ultimo_relativo]));
-		ultimo_relativo--;
 		downheap(elementos, 0, 1, 2, cmp, ultimo_relativo);
+		ultimo_relativo--;
 	}
 }
