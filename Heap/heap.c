@@ -94,6 +94,7 @@ heap_t *heap_crear(cmp_func_t cmp){
 	}
 	heap->cantidad = 0;
 	heap->capacidad = TAM_INICIAL;
+	heap->funcion_comparar = cmp;
 	return heap;
 }
 
