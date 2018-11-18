@@ -32,7 +32,7 @@ void swap(void** a, void** b){
 
 void downheap(void* arreglo[], size_t pos_padre, size_t pos_hijo_izq, size_t pos_hijo_der, cmp_func_t cmp, size_t tam){
 
-	if(pos_hijo_der > tam || pos_hijo_izq > tam)
+	if(pos_hijo_der >= tam || pos_hijo_izq >= tam)
 		return;
 
 	size_t pos_hijo_a_cambiar;
@@ -175,6 +175,7 @@ void *heap_desencolar(heap_t *heap){
 		heap_a_redimensionar(heap, heap->capacidad/FACTOR_REDIMENSION);
 	void* a_devolver = heap->vector[0];
 	swap(&(heap->vector[0]), &(heap->vector[heap->cantidad-1]));
+	heap->vector[heap->cantidad-1] = NULL;
 	heap->cantidad--;
 	downheap(heap->vector, 0, 1, 2,  heap->funcion_comparar, heap->cantidad);
 	return a_devolver;
@@ -183,9 +184,10 @@ void *heap_desencolar(heap_t *heap){
 
 void heap_sort(void *elementos[], size_t cant, cmp_func_t cmp){
 	heapify(elementos, cant, cmp);
-	size_t ultimo_relativo = cant;
-	for(size_t i = 0; i < cant-1; i++){
+	size_t ultimo_relativo = cant-1;
+	for(size_t i = 0; i < cant-2; i++){
 		swap(&(elementos[0]), &(elementos[ultimo_relativo]));
-		downheap(elementos, 0, 1, 2, cmp, cant);
+		ultimo_relativo--;
+		downheap(elementos, 0, 1, 2, cmp, ultimo_relativo);
 	}
 }
