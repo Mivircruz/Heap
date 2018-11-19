@@ -122,6 +122,7 @@ heap_t *heap_crear_arr(void *arreglo[], size_t n, cmp_func_t cmp){
 	free(heap->vector);
 	heap->vector = vector;
 	heap->cantidad = n;
+	heap->capacidad = n;
 	heap->funcion_comparar = cmp;
 	return heap;
 }
