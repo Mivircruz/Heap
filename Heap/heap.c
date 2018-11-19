@@ -181,7 +181,7 @@ void *heap_desencolar(heap_t *heap){
 void heap_sort(void *elementos[], size_t cant, cmp_func_t cmp){
 	heapify(elementos, cant, cmp);
 	size_t ultimo_relativo = cant-1;
-	for(size_t i = 0; i < cant-2; i++){
+	for(size_t i = 0; i < cant; i++){
 		swap(&(elementos[0]), &(elementos[ultimo_relativo]));
 		downheap(elementos, 0, 1, 2, cmp, ultimo_relativo);
 		ultimo_relativo--;
