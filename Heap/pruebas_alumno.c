@@ -38,7 +38,7 @@ int comparar_enteros_grandes(const void* a, const void* b){
 
 static void prueba_crear_heap_vacio(){
 
-	printf("\n PRUEBAS CREAR HEAP VACÍO\n");
+    printf("\n PRUEBAS CREAR HEAP VACÍO\n");
 
     heap_t* heap = heap_crear(NULL);
 
@@ -53,15 +53,15 @@ static void prueba_crear_heap_vacio(){
 
 static void prueba_crear_heap_con_arreglo(){
 
-	printf("\n PRUEBAS CREAR HEAP CON ARREGLO\n");
+    printf("\n PRUEBAS CREAR HEAP CON ARREGLO\n");
 
-	int* numeros = malloc(sizeof(int*) * 7);
-	for(int i = 0; i < 7; i++)
-		numeros[i] = i;
+    int* numeros = malloc(sizeof(int*) * 7);
+    for(int i = 0; i < 7; i++)
+        numeros[i] = i;
 
-	void** vector = malloc(sizeof(void*) * 7);
-	for(size_t i = 0; i < 7; i++)
-		vector[i] = &numeros[i];
+    void** vector = malloc(sizeof(void*) * 7);
+    for(size_t i = 0; i < 7; i++)
+        vector[i] = &numeros[i];
 
     heap_t* heap = heap_crear_arr(vector, 7, comparar_enteros);
 
@@ -69,9 +69,9 @@ static void prueba_crear_heap_con_arreglo(){
     print_test("Prueba heap la cantidad de elementos es 7", heap_cantidad(heap) == 7);
     print_test("El máximo es el elemento correcto", *(int*)heap_ver_max(heap) == 6);
     print_test("Prueba heap desencolar máximo es el máximo del vector", *(int*)heap_desencolar(heap) == 6);
-   	print_test("Prueba heap está vacío es falso", !heap_esta_vacio(heap));
-	print_test("Prueba heap desencolar nuevo máximo", *(int*)heap_desencolar(heap) == 5);
-	print_test("Prueba heap cantidad es la correcta", heap_cantidad(heap) == 5);
+    print_test("Prueba heap está vacío es falso", !heap_esta_vacio(heap));
+    print_test("Prueba heap desencolar nuevo máximo", *(int*)heap_desencolar(heap) == 5);
+    print_test("Prueba heap cantidad es la correcta", heap_cantidad(heap) == 5);
 
     heap_destruir(heap, NULL);
     free(numeros);
@@ -79,7 +79,7 @@ static void prueba_crear_heap_con_arreglo(){
 
 static void prueba_heap_insertar(){
 
-	printf("\nINSERTAR COSAS EN HEAP\n");
+    printf("\nINSERTAR COSAS EN HEAP\n");
 
     heap_t* heap = heap_crear(comparar_enteros);
 
@@ -113,6 +113,31 @@ static void prueba_heap_insertar(){
     heap_destruir(heap, NULL);
 }
 
+static void prueba_heap_desencolar(){
+
+    heap_t* heap = heap_crear(comparar_enteros);
+
+    int vector[] = {15, 8, 20, 31, 5};
+    printf("\nPRUEBA HEAP DESENCOLAR\n");
+    // Inserta 3 valores y luego los borra
+    print_test("Prueba heap insertar 15", heap_encolar(heap, &vector[0]));
+    print_test("Prueba heap insertar 8", heap_encolar(heap, &vector[1]));
+    print_test("Prueba heap insertar 20", heap_encolar(heap, &vector[2]));
+    print_test("Prueba heap insertar 31", heap_encolar(heap, &vector[3]));
+    print_test("Prueba heap insertar 5", heap_encolar(heap, &vector[4]));
+    print_test("prueba ver maximo es 31", heap_ver_max(heap) == &vector[3]);
+
+    print_test("Prueba heap desencolar, es 31", heap_desencolar(heap) == &vector[3]);
+    print_test("Prueba heap la cantidad de elementos es 4", heap_cantidad(heap) == 4);
+    print_test("Prueba heap ver maximo es 20", heap_ver_max(heap) == &vector[2]);
+    print_test("Prueba heap desencolar, es 20", heap_desencolar(heap) == &vector[2]);
+    print_test("Prueba heap la cantidad de elementos es 3", heap_cantidad(heap) == 3);
+    print_test("Prueba heap ver maximo es 15", heap_ver_max(heap) == &vector[0]);
+    print_test("Prueba heap desencolar, es 15", heap_desencolar(heap) == &vector[0]);
+    print_test("Prueba heap la cantidad de elementos es 2", heap_cantidad(heap) == 2);
+    
+    heap_destruir(heap, NULL);
+}
 
 static void prueba_heap_volumen(size_t tam){
 
@@ -124,12 +149,11 @@ static void prueba_heap_volumen(size_t tam){
     long int* vec_vol = malloc(sizeof(long int)*tam);
     void** arreglo = malloc(sizeof(void*)*tam);
 
-    for(long int i = 0; i < tam; i++)
+    for(long int i = 0; i < tam; i++){
         vec_vol[i] = i;
-
-    for(size_t i = 0; i < tam; i++)
-        arreglo[i] = &vec_vol[i];
-
+        arreglo[i] = &(vec_vol[i]);
+    }
+       
     heap_t* heap = heap_crear_arr(arreglo, tam, comparar_enteros_grandes);
 
     //Comienzo de las pruebas con heap_crear_arr
@@ -152,9 +176,9 @@ static void prueba_heap_volumen(size_t tam){
 
     heap = heap_crear(comparar_enteros_grandes);
     for(size_t i = 0; i < tam; i++) {
-        ok = heap_encolar(heap, arreglo[i]);
+        ok = heap_encolar(heap, &(vec_vol[i]));
         if (!ok) break;
-        ok = heap_ver_max(heap) == arreglo[i];
+        ok = *(long int*)heap_ver_max(heap) == vec_vol[i];
         if (!ok) break;
     }
 
@@ -163,34 +187,9 @@ static void prueba_heap_volumen(size_t tam){
 
     heap_destruir(heap, NULL);
     free(vec_vol);
-
-
 }
 
-static void prueba_heap_desencolar(){
-	heap_t* heap = heap_crear(comparar_enteros);
 
-    int vector[] = {15, 8, 20, 31, 5};
-    printf("\nPRUEBA HEAP DESENCOLAR\n");
-    // Inserta 3 valores y luego los borra
-    print_test("Prueba heap insertar 15", heap_encolar(heap, &vector[0]));
-    print_test("Prueba heap insertar 8", heap_encolar(heap, &vector[1]));
-    print_test("Prueba heap insertar 20", heap_encolar(heap, &vector[2]));
-    print_test("Prueba heap insertar 31", heap_encolar(heap, &vector[3]));
-    print_test("Prueba heap insertar 5", heap_encolar(heap, &vector[4]));
-    print_test("prueba ver maximo es 31", heap_ver_max(heap) == &vector[3]);
-
-	print_test("Prueba heap desencolar, es 31", heap_desencolar(heap) == &vector[3]);
-    print_test("Prueba heap la cantidad de elementos es 4", heap_cantidad(heap) == 4);
-	print_test("Prueba heap ver maximo es 20", heap_ver_max(heap) == &vector[2]);
-    print_test("Prueba heap desencolar, es 20", heap_desencolar(heap) == &vector[2]);
-    print_test("Prueba heap la cantidad de elementos es 3", heap_cantidad(heap) == 3);
-	print_test("Prueba heap ver maximo es 15", heap_ver_max(heap) == &vector[0]);
-    print_test("Prueba heap desencolar, es 15", heap_desencolar(heap) == &vector[0]);
-    print_test("Prueba heap la cantidad de elementos es 2", heap_cantidad(heap) == 2);
-	
-    heap_destruir(heap, NULL);
-}
 
 static void prueba_heap_heapsort(){
 	size_t largo = 7;
@@ -219,6 +218,6 @@ void pruebas_heap_alumno(void){
 	prueba_crear_heap_con_arreglo();
 	prueba_heap_insertar();
 	prueba_heap_desencolar();
-    prueba_heap_volumen(10000);
+    prueba_heap_volumen(1000);
 	prueba_heap_heapsort();
 }
