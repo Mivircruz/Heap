@@ -113,10 +113,14 @@ heap_t *heap_crear_arr(void *arreglo[], size_t n, cmp_func_t cmp){
 	heap_t* heap = heap_crear(cmp);
 	if(!heap)
 		return NULL;
-
-	heapify(arreglo, n, cmp);
+	
+	void** vector = malloc(sizeof(void*) * n);
+	for(int i = 0; i < n; i++)
+		vector[i] = arreglo[i];
+	
+	heapify(vector, n, cmp);
 	free(heap->vector);
-	heap->vector = arreglo;
+	heap->vector = vector;
 	heap->cantidad = n;
 	heap->funcion_comparar = cmp;
 	return heap;
