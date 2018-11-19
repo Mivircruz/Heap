@@ -38,10 +38,10 @@ void downheap(void* arreglo[], size_t pos_padre, size_t pos_hijo_izq, size_t pos
 
 	size_t pos_hijo_a_cambiar;
 
-	if(pos_hijo_der < tam && pos_hijo_izq < tam){
-
+	if(pos_hijo_der < tam){
 		if(cmp(arreglo[pos_padre], arreglo[pos_hijo_izq]) < 0 ||  cmp(arreglo[pos_padre], arreglo[pos_hijo_der]) < 0)
 			pos_hijo_a_cambiar = (cmp(arreglo[pos_hijo_izq], arreglo[pos_hijo_der]) < 0) ? pos_hijo_der : pos_hijo_izq;
+		else return;
 	}
 	else{
 		pos_hijo_a_cambiar =  pos_hijo_izq;
@@ -70,7 +70,7 @@ void upheap(void* arreglo[], size_t pos_hijo, cmp_func_t cmp){
 
 void heapify(void* arreglo[], size_t n, cmp_func_t cmp){
 
-	for(int i = (int)(n/2 - 1); 0 <= i; i--)
+	for(long int i = (long int)(n/2 - 1); 0 <= i; i--)
 		downheap(arreglo, i, i*2+1, i*2+2, cmp, n);
 }
 
@@ -172,7 +172,6 @@ void *heap_desencolar(heap_t *heap){
 		heap_a_redimensionar(heap, heap->capacidad/FACTOR_REDIMENSION);
 	void* a_devolver = heap->vector[0];
 	swap(&(heap->vector[0]), &(heap->vector[heap->cantidad-1]));
-	heap->vector[heap->cantidad-1] = NULL;
 	heap->cantidad--;
 	downheap(heap->vector, 0, 1, 2,  heap->funcion_comparar, heap->cantidad);
 	return a_devolver;
