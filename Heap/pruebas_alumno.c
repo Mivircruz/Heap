@@ -72,7 +72,13 @@ static void prueba_crear_heap_con_arreglo(){
     print_test("Prueba heap está vacío es falso", !heap_esta_vacio(heap));
     print_test("Prueba heap desencolar nuevo máximo", *(int*)heap_desencolar(heap) == 5);
     print_test("Prueba heap cantidad es la correcta", heap_cantidad(heap) == 5);
-
+	
+    // Pruebas al liberar el vector, no afecta al heap
+    free(vector);
+    print_test("Prueba heap desencolar", *(int*)heap_desencolar(heap) == 4);
+    print_test("Prueba heap cantidad es 4", heap_cantidad(heap) == 4);
+    print_test("Prueba heap no esta vacio", !heap_esta_vacio(heap));
+	
     heap_destruir(heap, NULL);
     free(numeros);
 }
@@ -187,6 +193,7 @@ static void prueba_heap_volumen(size_t tam){
 
     heap_destruir(heap, NULL);
     free(vec_vol);
+    free(arreglo);
 }
 
 
